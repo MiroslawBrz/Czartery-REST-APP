@@ -15,7 +15,12 @@ public class CharterPlace {
     private String webSiteUrl;
     private double mapLatitude;
     private double mapLongitude;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "addressId")
+    private CharterPlaceAddress charterPlaceAddress;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "admin_id", referencedColumnName = "adminId")
+    private CharterPlaceAdmin charterPlaceAdmin;
 
 
 }
