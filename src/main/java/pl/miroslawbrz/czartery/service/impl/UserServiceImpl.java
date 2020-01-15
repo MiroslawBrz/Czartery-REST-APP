@@ -95,10 +95,10 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
                 || isNullOrEmpty(request.getUserPassword()) ) {
             throw new CommonBadRequestException(msgSource.ERR001);
         }
-        if(isStringValidate(PatternsForValidator.emailPattern, request.getUserMail())){
+        if(!isStringValidate(PatternsForValidator.emailPattern, request.getUserMail())){
             throw new CommonBadRequestException(msgSource.ERR002);
         }
-        if(isStringValidate(PatternsForValidator.passwordPattern, request.getUserPassword())){
+        if(!isStringValidate(PatternsForValidator.passwordPattern, request.getUserPassword())){
             throw new CommonBadRequestException(msgSource.ERR003);
         }
     }

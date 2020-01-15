@@ -15,8 +15,6 @@ public class CharterPlace {
     private String webSiteUrl;
     private double mapLatitude;
     private double mapLongitude;
-    @OneToOne
-    private CharterPlaceAddress charterPlaceAddress;
 
 
 

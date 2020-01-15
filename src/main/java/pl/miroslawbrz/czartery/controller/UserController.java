@@ -1,6 +1,5 @@
 package pl.miroslawbrz.czartery.controller;
 
-import org.hibernate.internal.build.AllowPrintStacktrace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
