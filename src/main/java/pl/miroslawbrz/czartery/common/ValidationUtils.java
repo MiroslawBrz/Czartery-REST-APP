@@ -1,4 +1,4 @@
-package pl.miroslawbrz.czartery.api.common;
+package pl.miroslawbrz.czartery.common;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

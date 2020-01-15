@@ -1,6 +1,6 @@
 package pl.miroslawbrz.czartery.api.response;
 
-import lombok.Data;
+
 import pl.miroslawbrz.czartery.api.BasicResponse;
 
 

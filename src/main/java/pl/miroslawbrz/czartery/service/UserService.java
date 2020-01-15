@@ -1,11 +1,18 @@
 package pl.miroslawbrz.czartery.service;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import pl.miroslawbrz.czartery.api.request.CreateUserRequest;
 import pl.miroslawbrz.czartery.api.response.CreateUserResponse;
+import pl.miroslawbrz.czartery.model.User;
+
+import java.util.List;
 
 public interface UserService {
 
     ResponseEntity<CreateUserResponse> createUser(CreateUserRequest createUserRequest);
+
+    ResponseEntity<List<User>> getAllUsers();
+
+    ResponseEntity<User> getUserById(Long id);
+
 }

@@ -6,5 +6,9 @@ import pl.miroslawbrz.czartery.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
     User findByUserMail(String mail);
+
+
+
 }

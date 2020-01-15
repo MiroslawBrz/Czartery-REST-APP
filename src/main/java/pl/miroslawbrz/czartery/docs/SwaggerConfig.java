@@ -17,8 +17,8 @@ public class SwaggerConfig {
     public Docket personApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("conectis.controller"))
-                .paths(regex("/api/v1.*"))
+                .apis(RequestHandlerSelectors.basePackage("pl.miroslawbrz.czartery.controller"))
+                .paths(regex("/api.*"))
                 .build();
     }
 

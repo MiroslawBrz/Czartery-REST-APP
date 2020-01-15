@@ -1,6 +1,6 @@
 package pl.miroslawbrz.czartery.service;
 
-import pl.miroslawbrz.czartery.api.common.MsgSource;
+import pl.miroslawbrz.czartery.common.MsgSource;
 
 public abstract class AbstractCommonService {
 

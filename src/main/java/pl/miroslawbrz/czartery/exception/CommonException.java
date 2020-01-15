@@ -1,7 +1,7 @@
 package pl.miroslawbrz.czartery.exception;
 
 import lombok.Getter;
-import pl.miroslawbrz.czartery.api.common.ConstErrorMsg;
+import pl.miroslawbrz.czartery.common.ConstErrorMsg;
 
 public class CommonException extends RuntimeException {
 

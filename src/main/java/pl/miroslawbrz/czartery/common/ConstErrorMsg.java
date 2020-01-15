@@ -1,4 +1,4 @@
-package pl.miroslawbrz.czartery.api.common;
+package pl.miroslawbrz.czartery.common;
 
 public class ConstErrorMsg {
 

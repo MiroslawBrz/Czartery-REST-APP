@@ -4,8 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Data
 @Entity
@@ -22,8 +21,6 @@ public class User {
     @NotEmpty
     private String userPassword;
     private boolean userActive;
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<CharterPlace> charterPlaces = new HashSet<>();
 
     public static final class Builder{
         private String userName = null;
