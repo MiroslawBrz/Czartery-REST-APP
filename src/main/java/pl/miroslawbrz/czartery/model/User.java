@@ -1,6 +1,7 @@
 package pl.miroslawbrz.czartery.model;
 
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -16,6 +17,8 @@ public class User {
     private Long userId;
     private String userName;
     private String userLastName;
+    @Nullable
+    private int activationHash;
     @NotEmpty
     private String userMail;
     @NotEmpty
@@ -27,6 +30,7 @@ public class User {
         private String userLastName = null;
         private String userMail = null;
         private String userPassword = null;
+        private int userActivationHash = 0;
 
         public Builder userName(String userName){
             this.userName=userName;
@@ -42,6 +46,10 @@ public class User {
         }
         public Builder userPassword(String userPassword){
             this.userPassword=userPassword;
+            return this;
+        }
+        public Builder userActivationHash(int userActivationHash){
+            this.userActivationHash=userActivationHash;
             return this;
         }
 

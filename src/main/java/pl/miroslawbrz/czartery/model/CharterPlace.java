@@ -2,10 +2,7 @@ package pl.miroslawbrz.czartery.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -18,6 +15,8 @@ public class CharterPlace {
     private String webSiteUrl;
     private double mapLatitude;
     private double mapLongitude;
+    @OneToOne
+    private CharterPlaceAddress charterPlaceAddress;
 
 
 

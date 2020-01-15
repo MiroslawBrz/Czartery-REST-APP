@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import pl.miroslawbrz.czartery.api.response.UpdateUserResponse;
 import pl.miroslawbrz.czartery.common.MsgSource;
 import pl.miroslawbrz.czartery.api.request.CreateUserRequest;
 import pl.miroslawbrz.czartery.api.response.CreateUserResponse;
@@ -63,6 +64,17 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
         return ResponseEntity.ok(userOptional.get());
     }
 
+    @Override
+    public ResponseEntity<UpdateUserResponse> activateUserInDB(Long id, int hash) {
+        User user = getUserById(id).getBody();
+        assert user != null;
+        checkIsActivationHashIsCorrect(user, hash);
+        user.setUserActive(true);
+        userRepository.save(user);
+        return ResponseEntity.ok(new UpdateUserResponse(msgSource.OK002, user.getUserId()));
+    }
+
+
     private User addUserToDB(CreateUserRequest request){
         User user = new User.Builder()
                 .userName(request.getUserName())
@@ -70,6 +82,8 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
                 .userMail(request.getUserMail())
                 .userPassword(request.getUserPassword())
                 .build();
+
+        user.setActivationHash(user.hashCode());
 
         return userRepository.save(user);
     }
@@ -96,6 +110,15 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
         if(user!=null){
             throw new CommonBadRequestException(msgSource.ERR004);
         }
+    }
+
+    private void checkIsActivationHashIsCorrect(User user, int hash){
+
+        if(user.getActivationHash()!=hash){
+            throw new CommonConflictException(msgSource.ERR006);
+        }
+
+
     }
 
 
