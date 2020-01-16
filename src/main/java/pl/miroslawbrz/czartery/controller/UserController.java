@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.miroslawbrz.czartery.api.request.CreateUserRequest;
-import pl.miroslawbrz.czartery.api.response.CreateUserResponse;
 import pl.miroslawbrz.czartery.api.response.UpdateUserResponse;
 import pl.miroslawbrz.czartery.model.User;
 import pl.miroslawbrz.czartery.service.UserService;
@@ -23,8 +22,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
-    public ResponseEntity<CreateUserResponse> createUserAccount(@RequestBody CreateUserRequest request){
+    @PostMapping(value = "/users", produces = "application/json")
+    public ResponseEntity createUserAccount(@RequestBody CreateUserRequest request){
 
         return userService.createUser(request);
     }

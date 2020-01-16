@@ -1,9 +1,9 @@
 package pl.miroslawbrz.czartery.api.response;
 
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import pl.miroslawbrz.czartery.api.BasicResponse;
 
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreateUserResponse extends BasicResponse {
 
     private Long id;

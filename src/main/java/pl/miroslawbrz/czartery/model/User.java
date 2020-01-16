@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
 
 @Data
@@ -22,6 +23,11 @@ public class User {
     @NotEmpty
     private String userPassword;
     private boolean userActive;
+    @OneToMany(mappedBy = "user")
+    private Set<CharterPlace> charterPlaceSet;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_role_id", referencedColumnName = "id")
+    private UserRole userRole;
 
     public static final class Builder{
         private String userName = null;

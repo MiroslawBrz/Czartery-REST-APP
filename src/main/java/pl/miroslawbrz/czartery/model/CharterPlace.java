@@ -19,8 +19,8 @@ public class CharterPlace {
     @JoinColumn(name = "address_id", referencedColumnName = "addressId")
     private CharterPlaceAddress charterPlaceAddress;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "admin_id", referencedColumnName = "adminId")
-    private CharterPlaceAdmin charterPlaceAdmin;
+    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    private User user;
 
 
 }
