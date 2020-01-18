@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity createUserAccount(@RequestBody CreateUserRequest request){
+    public ResponseEntity<UserResponse> createUserAccount(@RequestBody CreateUserRequest request){
 
         return userService.createUser(request);
     }

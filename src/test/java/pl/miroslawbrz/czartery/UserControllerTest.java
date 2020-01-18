@@ -52,11 +52,11 @@ public class UserControllerTest {
                 .andReturn();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        UserResponse response = objectMapper.readValue(
+        UserResponse userResponse = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
                 UserResponse.class
         );
-        Optional<User> optionalUser = userRepository.findById(response.getId());
+        Optional<User> optionalUser = userRepository.findById(userResponse.getId());
         Assert.assertTrue(optionalUser.isPresent());
 
     }
