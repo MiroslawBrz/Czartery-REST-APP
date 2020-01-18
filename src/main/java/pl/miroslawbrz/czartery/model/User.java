@@ -1,5 +1,7 @@
 package pl.miroslawbrz.czartery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,6 +25,7 @@ public class User {
     @NotEmpty
     private String userPassword;
     private boolean userActive;
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<CharterPlace> charterPlaceSet;
     @ManyToOne(cascade = CascadeType.ALL)

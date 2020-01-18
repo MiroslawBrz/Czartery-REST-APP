@@ -4,14 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import pl.miroslawbrz.czartery.api.response.UpdateUserResponse;
+import org.springframework.transaction.annotation.Transactional;
 import pl.miroslawbrz.czartery.common.MsgSource;
 import pl.miroslawbrz.czartery.api.request.CreateUserRequest;
-import pl.miroslawbrz.czartery.api.response.CreateUserResponse;
+import pl.miroslawbrz.czartery.api.response.UserResponse;
 import pl.miroslawbrz.czartery.common.PatternsForValidator;
 import pl.miroslawbrz.czartery.exception.CommonBadRequestException;
 import pl.miroslawbrz.czartery.exception.CommonConflictException;
-import pl.miroslawbrz.czartery.model.CharterPlace;
 import pl.miroslawbrz.czartery.model.User;
 import pl.miroslawbrz.czartery.repository.UserRepository;
 import pl.miroslawbrz.czartery.service.AbstractCommonService;
@@ -37,14 +36,14 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
 
 
     @Override
-    public ResponseEntity<CreateUserResponse> createUser(CreateUserRequest createUserRequest) {
+    public ResponseEntity<UserResponse> createUser(CreateUserRequest createUserRequest) {
 
         validateCreateUser(createUserRequest);
         checkUserMailAlreadyExist(createUserRequest.getUserMail());
 
         User addedUser = addUserToDB(createUserRequest);
 
-        return ResponseEntity.ok(new CreateUserResponse(msgSource.OK001, addedUser.getUserId()));
+        return ResponseEntity.ok(new UserResponse(msgSource.OK001, addedUser.getUserId()));
     }
 
     @Override
@@ -65,13 +64,37 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
     }
 
     @Override
-    public ResponseEntity<UpdateUserResponse> activateUserInDB(Long id, int hash) {
+    public ResponseEntity<UserResponse> activateUserInDB(Long id, int hash) {
         User user = getUserById(id).getBody();
         assert user != null;
         checkIsActivationHashIsCorrect(user, hash);
         user.setUserActive(true);
         userRepository.save(user);
-        return ResponseEntity.ok(new UpdateUserResponse(msgSource.OK002, user.getUserId()));
+        return ResponseEntity.ok(new UserResponse(msgSource.OK002, user.getUserId()));
+    }
+
+    @Override
+    public ResponseEntity<UserResponse> updateUserData(Long id, CreateUserRequest request) {
+        User user = getUserById(id).getBody();
+        validateCreateUser(request);
+        assert user != null;
+        user.setUserName(request.getUserName());
+        user.setUserLastName(request.getUserLastName());
+        user.setUserPassword(request.getUserPassword());
+        if(!user.getUserMail().equals(request.getUserMail())){
+            checkUserMailAlreadyExist(request.getUserMail());
+            user.setUserMail(request.getUserMail());
+        }
+        userRepository.save(user);
+        return ResponseEntity.ok(new UserResponse(msgSource.OK003, user.getUserId()));
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<UserResponse> deleteUser(Long id) {
+        User user = getUserById(id).getBody(); //jeśli nie ma usera o takim id to ERR005
+        userRepository.deleteById(id);
+        return ResponseEntity.ok(new UserResponse(msgSource.OK004, id));
     }
 
 
@@ -108,7 +131,7 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
         User user = userRepository.findByUserMail(userMail);
 
         if(user!=null){
-            throw new CommonBadRequestException(msgSource.ERR004);
+            throw new CommonConflictException(msgSource.ERR004);
         }
     }
 
@@ -117,7 +140,6 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
         if(user.getActivationHash()!=hash){
             throw new CommonConflictException(msgSource.ERR006);
         }
-
 
     }
 

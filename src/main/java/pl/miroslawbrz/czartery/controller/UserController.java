@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.miroslawbrz.czartery.api.request.CreateUserRequest;
-import pl.miroslawbrz.czartery.api.response.UpdateUserResponse;
+import pl.miroslawbrz.czartery.api.response.UserResponse;
 import pl.miroslawbrz.czartery.model.User;
 import pl.miroslawbrz.czartery.service.UserService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api")
+@RequestMapping(value = "/api/users")
 public class UserController {
 
     private UserService userService;
@@ -22,30 +22,41 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/users", produces = "application/json")
+    @PostMapping(produces = "application/json")
     public ResponseEntity createUserAccount(@RequestBody CreateUserRequest request){
 
         return userService.createUser(request);
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id){
 
         return userService.getUserById(id);
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity<List<User>> getAllUsers(){
 
         return userService.getAllUsers();
     }
 
-    @PutMapping("/users/{id}/{activationHash}")
-    public ResponseEntity<UpdateUserResponse> updateUserActivation(
+    @PutMapping("/{id}/{activationHash}")
+    public ResponseEntity<UserResponse> updateUserActivation(
             @PathVariable Long id,
             @PathVariable int activationHash){
 
         return userService.activateUserInDB(id, activationHash);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody CreateUserRequest request){
+
+        return userService.updateUserData(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id){
+
+        return userService.deleteUser(id);
+    }
 }
