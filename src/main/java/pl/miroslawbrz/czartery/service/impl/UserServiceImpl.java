@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.miroslawbrz.czartery.common.MsgSource;
 import pl.miroslawbrz.czartery.api.request.CreateUserRequest;
 import pl.miroslawbrz.czartery.api.response.UserResponse;
-import pl.miroslawbrz.czartery.common.PatternsForValidator;
+import pl.miroslawbrz.czartery.constans.PatternsForValidator;
 import pl.miroslawbrz.czartery.exception.CommonBadRequestException;
 import pl.miroslawbrz.czartery.exception.CommonConflictException;
 import pl.miroslawbrz.czartery.model.User;

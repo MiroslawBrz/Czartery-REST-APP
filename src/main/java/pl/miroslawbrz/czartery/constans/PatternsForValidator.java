@@ -1,4 +1,4 @@
-package pl.miroslawbrz.czartery.common;
+package pl.miroslawbrz.czartery.constans;
 
 public class PatternsForValidator {
 

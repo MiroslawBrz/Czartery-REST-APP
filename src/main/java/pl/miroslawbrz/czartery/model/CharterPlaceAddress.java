@@ -16,7 +16,7 @@ public class CharterPlaceAddress {
     private String addressCity;
     private String addressBuildingNumber;
     private String addressPostalCode;
-    private final String addressCountry = "Poland";
+    public static final String addressCountry = "Poland";
     private double mapLatitude;
     private double mapLongitude;
     @OneToOne(mappedBy = "charterPlaceAddress")
