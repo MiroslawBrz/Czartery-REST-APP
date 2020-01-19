@@ -7,5 +7,4 @@ import pl.miroslawbrz.czartery.model.CharterPlace;
 @Repository
 public interface CharterPlaceRepository extends JpaRepository<CharterPlace, Long> {
 
-
 }

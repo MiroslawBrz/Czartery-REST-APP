@@ -26,7 +26,7 @@ public class User {
     private String userPassword;
     private boolean userActive;
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<CharterPlace> charterPlaceSet;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_role_id", referencedColumnName = "id")
@@ -38,6 +38,7 @@ public class User {
         private String userMail = null;
         private String userPassword = null;
         private Integer userActivationHash = null;
+        private UserRole userRole = null;
 
         public Builder userName(String userName){
             this.userName=userName;
@@ -55,8 +56,12 @@ public class User {
             this.userPassword=userPassword;
             return this;
         }
-        public Builder userActivationHash(int userActivationHash){
+        public Builder userActivationHash(Integer userActivationHash){
             this.userActivationHash=userActivationHash;
+            return this;
+        }
+        public Builder userRole(UserRole userRole){
+            this.userRole=userRole;
             return this;
         }
 
@@ -67,6 +72,7 @@ public class User {
             user.userMail = this.userMail;
             user.userPassword = this.userPassword;
             user.activationHash = this.userActivationHash;
+            user.userRole=this.userRole;
             return user;
         }
 

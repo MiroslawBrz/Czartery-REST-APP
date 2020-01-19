@@ -11,6 +11,11 @@ public class MsgSource {
     public final String OK003;
     public final String OK004;
 
+    public final String OK101;
+    public final String OK102;
+    public final String OK103;
+    public final String OK105;
+
     public final ConstErrorMsg ERR001;
     public final ConstErrorMsg ERR002;
     public final ConstErrorMsg ERR003;
@@ -18,21 +23,29 @@ public class MsgSource {
     public final ConstErrorMsg ERR005;
     public final ConstErrorMsg ERR006;
 
+    public final ConstErrorMsg ERR101;
+
     public MsgSource(
 
-            @Value("${common.ok.msg.ok001}") String ok001MsgValue,
-            @Value("${common.ok.msg.ok002}") String ok002MsgValue,
-            @Value("${common.ok.msg.ok003}") String ok003MsgValue,
-            @Value("${common.ok.msg.ok004}") String ok004MsgValue,
+            @Value("${user.ok.msg.ok001}") String ok001MsgValue,
+            @Value("${user.ok.msg.ok002}") String ok002MsgValue,
+            @Value("${user.ok.msg.ok003}") String ok003MsgValue,
+            @Value("${user.ok.msg.ok004}") String ok004MsgValue,
+
+            @Value("${charter.ok.msg.ok101}") String ok101MsgValue,
+            @Value("${charter.ok.msg.ok102}") String ok102MsgValue,
+            @Value("${charter.ok.msg.ok103}") String ok103MsgValue,
+            @Value("${charter.ok.msg.ok105}") String ok105MsgValue,
 
 
-            @Value("${common.const.error.msg.err001}") String err001MsgValue,
-            @Value("${common.const.error.msg.err002}") String err002MsgValue,
-            @Value("${common.const.error.msg.err003}") String err003MsgValue,
-            @Value("${common.const.error.msg.err004}") String err004MsgValue,
-            @Value("${common.const.error.msg.err005}") String err005MsgValue,
-            @Value("${common.const.error.msg.err006}") String err006MsgValue
+            @Value("${user.const.error.msg.err001}") String err001MsgValue,
+            @Value("${user.const.error.msg.err002}") String err002MsgValue,
+            @Value("${user.const.error.msg.err003}") String err003MsgValue,
+            @Value("${user.const.error.msg.err004}") String err004MsgValue,
+            @Value("${user.const.error.msg.err005}") String err005MsgValue,
+            @Value("${user.const.error.msg.err006}") String err006MsgValue,
 
+            @Value("${charter.const.error.msg.err101}") String err101MsgValue
 
     ){
 
@@ -41,6 +54,11 @@ public class MsgSource {
         OK003 = ok003MsgValue;
         OK004 = ok004MsgValue;
 
+        OK101 = ok101MsgValue;
+        OK102 = ok102MsgValue;
+        OK103 = ok003MsgValue;
+        OK105 = ok105MsgValue;
+
         ERR001 = new ConstErrorMsg("ERR001", err001MsgValue);
         ERR002 = new ConstErrorMsg("ERR002", err002MsgValue);
         ERR003 = new ConstErrorMsg("ERR003", err003MsgValue);
@@ -48,7 +66,8 @@ public class MsgSource {
         ERR005 = new ConstErrorMsg("ERR005", err005MsgValue);
         ERR006 = new ConstErrorMsg("ERR006", err006MsgValue);
 
+        ERR101 = new ConstErrorMsg("ERR101", err101MsgValue);
+
+
     }
-
-
 }

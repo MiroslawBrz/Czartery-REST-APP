@@ -92,7 +92,7 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
     @Override
     @Transactional
     public ResponseEntity<UserResponse> deleteUser(Long id) {
-        User user = getUserById(id).getBody(); //jeśli nie ma usera o takim id to ERR005
+        getUserById(id); //jeśli nie ma usera o takim id to ERR005
         userRepository.deleteById(id);
         return ResponseEntity.ok(new UserResponse(msgSource.OK004, id));
     }

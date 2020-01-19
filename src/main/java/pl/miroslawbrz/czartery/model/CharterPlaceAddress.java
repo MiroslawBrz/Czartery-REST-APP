@@ -19,7 +19,7 @@ public class CharterPlaceAddress {
     public static final String addressCountry = "Poland";
     private double mapLatitude;
     private double mapLongitude;
-    @OneToOne(mappedBy = "charterPlaceAddress")
+    @OneToOne(mappedBy = "charterPlaceAddress", cascade = CascadeType.ALL)
     private CharterPlace charterPlace;
 
 }
