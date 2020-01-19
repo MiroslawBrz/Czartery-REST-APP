@@ -11,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-class GeoCoderApi{
+public class GeoCoderApi{
 
 
     String apiResponse(String request){
@@ -38,7 +38,7 @@ class GeoCoderApi{
         return response;
     }
 
-    String prepareRequest(CreateCharterPlaceRequest request){
+    public String prepareRequest(CreateCharterPlaceRequest request){
         String url = ApiUrl.GEO_CODER_URL;
         String apiKey = ApiUrl.GEO_CODER_API_KEY;
 
