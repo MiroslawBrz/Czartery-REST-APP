@@ -15,6 +15,7 @@ import pl.miroslawbrz.czartery.model.User;
 import pl.miroslawbrz.czartery.repository.UserRepository;
 import pl.miroslawbrz.czartery.service.AbstractCommonService;
 import pl.miroslawbrz.czartery.service.UserService;
+import pl.miroslawbrz.czartery.utils.Mail;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,13 +37,13 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
 
 
     @Override
-    public ResponseEntity<UserResponse> createUser(CreateUserRequest createUserRequest) {
+    public ResponseEntity<UserResponse> createUserAndSendMail(CreateUserRequest createUserRequest) {
 
         validateCreateUser(createUserRequest);
         checkUserMailAlreadyExist(createUserRequest.getUserMail());
 
         User addedUser = addUserToDB(createUserRequest);
-
+        Mail.sendEmail(addedUser);
         return ResponseEntity.ok(new UserResponse(msgSource.OK001, addedUser.getUserId()));
     }
 
@@ -69,6 +70,7 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
         assert user != null;
         checkIsActivationHashIsCorrect(user, hash);
         user.setUserActive(true);
+        user.setActivationHash(null);
         userRepository.save(user);
         return ResponseEntity.ok(new UserResponse(msgSource.OK002, user.getUserId()));
     }

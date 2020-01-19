@@ -25,7 +25,7 @@ public class UserController {
     @PostMapping(produces = "application/json")
     public ResponseEntity<UserResponse> createUserAccount(@RequestBody CreateUserRequest request){
 
-        return userService.createUser(request);
+        return userService.createUserAndSendMail(request);
     }
 
     @GetMapping("/{id}")

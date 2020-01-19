@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserService {
 
-    ResponseEntity<UserResponse> createUser(CreateUserRequest createUserRequest);
+    ResponseEntity<UserResponse> createUserAndSendMail(CreateUserRequest createUserRequest);
 
     ResponseEntity<List<User>> getAllUsers();
 
