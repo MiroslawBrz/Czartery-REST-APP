@@ -21,6 +21,7 @@ import pl.miroslawbrz.czartery.utils.AddressJsonParse;
 
 import static pl.miroslawbrz.czartery.common.ValidationUtils.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,12 +30,15 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
 
     private CharterPlaceRepository charterPlaceRepository;
     private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
-    public CharterPlaceServiceImpl(MsgSource msgSource, CharterPlaceRepository charterPlaceRepository, UserService userService) {
+    public CharterPlaceServiceImpl(MsgSource msgSource, CharterPlaceRepository charterPlaceRepository, UserService userService, UserRepository userRepository) {
         super(msgSource);
         this.charterPlaceRepository = charterPlaceRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
+
     }
 
 
@@ -124,7 +128,7 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
 
     private CharterPlace addCharterPlaceToDB(CreateCharterPlaceRequest request){
 
-        return charterPlaceRepository.save(createCharterPlaceFromRequest(request));
+        return createCharterPlaceFromRequest(request);
 
     }
 
@@ -133,11 +137,20 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
         CharterPlaceAddress charterPlaceAddress = AddressJsonParse.getFullAddressAndCoordinatesFromRequest(request);
         User user = userService.getUserById(request.getUserId()).getBody();
 
-        return new CharterPlace.Builder()
-                .user(user)
+        CharterPlace charterPlace = new CharterPlace.Builder()
                 .charterPlaceAddress(charterPlaceAddress)
                 .webSiteUrl(request.getWebSiteUrl())
                 .charterPlaceName(request.getCharterPlaceName())
                 .build();
+
+
+        assert user != null;
+        user.getCharterPlaceSet().add(charterPlace);
+        User userAfterSave = userRepository.save(user);
+        CharterPlace charterPlaceAfterSave = userAfterSave.getCharterPlaceSet().stream().filter(x -> x.getWebSiteUrl().equals(charterPlace.getWebSiteUrl())).findFirst().get();
+        charterPlaceRepository.insertIntoCharterPlaceUserId(userAfterSave.getUserId(), charterPlaceAfterSave.getCharterPlaceId());
+        return  charterPlaceAfterSave;
+
+
     }
 }

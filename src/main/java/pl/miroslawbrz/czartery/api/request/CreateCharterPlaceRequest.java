@@ -9,8 +9,8 @@ public class CreateCharterPlaceRequest {
     private String charterPlaceName;
     private String webSiteUrl;
     private String addressStreet;
-    private String addressCity;
     private String addressBuildingNumber;
+    private String addressCity;
     private Long userId;
 
     public static final class Builder{

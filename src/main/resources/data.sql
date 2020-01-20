@@ -4,3 +4,12 @@ VALUES
 ('Janusz', 'Nosacz', 'janusz@gmail.com','iuuh#sD9361/di8v', false, 789),
 ('Jan', 'Nowak', 'nowak@wp.pl', 'sdvs8F10vb!dbrd', true, 456);
 
+INSERT INTO public.charter_place_address (address_building_number, address_city, address_postal_code, address_street, map_latitude, map_longitude)
+VALUES
+('10', 'Warszawa', 'Kochanowskiego', '91-210', 15.621, 12.351),
+('11', 'Płock', 'Chemików', '01-230', 15.622, 12.974);
+
+INSERT INTO public.charter_place (charter_place_name, web_site_url, address_id, user_id)
+VALUES
+('Warszawski Klub Żeglarski', 'www.wkz.waw.pl', 1, 2),
+('Płocki Klub Żeglarski', 'zeglarskiploc.pl', 2, 2);

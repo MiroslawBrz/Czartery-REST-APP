@@ -1,5 +1,6 @@
 package pl.miroslawbrz.czartery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class CharterPlaceAddress {
     public static final String addressCountry = "Poland";
     private double mapLatitude;
     private double mapLongitude;
+    @JsonIgnore
     @OneToOne(mappedBy = "charterPlaceAddress", cascade = CascadeType.ALL)
     private CharterPlace charterPlace;
 
