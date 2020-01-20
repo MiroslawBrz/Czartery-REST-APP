@@ -33,16 +33,14 @@ public class CharterPlaceTests {
 
         MvcResult mvcResult = mockMvc.perform(post("/api/charterplace")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "\t\"charterPlaceName\": \"Zegrze 360\",\n" +
-                        "\t\"webSiteUrl\": \"zegrze360.pl\",\n" +
-                        "\t\"addressStreet\": \"Bogusławskiego\",\n" +
-                        "\t\"addressCity\": \"Warszawa\"\n" +
-                        "\t\"addressBuildingNumber\": \"17\"\n" +
-                        "\t\"userId\": \"1\"\n" +
-                        "}"))
+                .content( "{\"charterPlaceName\": \"Płocki Klub Żeglarski\"," +
+                                "\"webSiteUrl\": \"zeglarskiploc.pl\"," +
+                                "\"addressStreet\": \"Bogusławskiego\"," +
+                                "\"addressCity\": \"Warszawa\", " +
+                                "\"addressBuildingNumber\": \"17\"," +
+                                "\"userId\" : 1 }"))
                 .andExpect(status().is(200))
-                .andExpect(content().string(Matchers.containsString("Poprawnie dodano wypożyczalnię")))
+                .andExpect(content().string(Matchers.containsString("Poprawnie dodano")))
                 .andExpect(content().string(Matchers.containsString("id")))
                 .andReturn();
 
