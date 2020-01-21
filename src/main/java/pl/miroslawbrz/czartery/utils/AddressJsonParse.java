@@ -24,9 +24,9 @@ public class AddressJsonParse {
 
         CharterPlaceAddress address = new CharterPlaceAddress();
 
-        GeoCoderApi geoCoderApi = new GeoCoderApi();
-        String url = geoCoderApi.prepareRequest(request);
-        String json = geoCoderApi.apiResponse(url);
+        ExternalApi externalApi = new ExternalApi();
+        String url = externalApi.prepareGeoCoderURL(request);
+        String json = externalApi.apiResponse(url);
         JSONObject jsonObject = new JSONObject(json);
         JSONArray jsonArray = jsonObject.getJSONObject("Response").getJSONArray("View");
         JSONArray jsonArrayResult = null;

@@ -2,6 +2,7 @@ package pl.miroslawbrz.czartery.utils;
 
 import pl.miroslawbrz.czartery.api.request.CreateCharterPlaceRequest;
 import pl.miroslawbrz.czartery.constans.ApiUrl;
+import pl.miroslawbrz.czartery.model.CharterPlace;
 import pl.miroslawbrz.czartery.model.CharterPlaceAddress;
 
 import java.io.BufferedReader;
@@ -11,16 +12,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class GeoCoderApi{
+public class ExternalApi {
 
 
-    String apiResponse(String request){
+    String apiResponse(String URL){
 
         String response = null;
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(request).openConnection();
+            HttpURLConnection connection = (HttpURLConnection) new URL(URL).openConnection();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     connection.getResponseCode() == 200 ? connection.getInputStream():connection.getErrorStream()
@@ -38,7 +39,7 @@ public class GeoCoderApi{
         return response;
     }
 
-    public String prepareRequest(CreateCharterPlaceRequest request){
+    public String prepareGeoCoderURL(CreateCharterPlaceRequest request){
         String url = ApiUrl.GEO_CODER_URL;
         String apiKey = ApiUrl.GEO_CODER_API_KEY;
 
@@ -57,6 +58,28 @@ public class GeoCoderApi{
         sb.append(CharterPlaceAddress.addressCountry);
 
         return sb.toString();
+    }
+
+    public String prepareOpenWeatherURL(CharterPlace charterPlace){
+
+        double longitude = charterPlace.getCharterPlaceAddress().getMapLongitude();
+        double latitude = charterPlace.getCharterPlaceAddress().getMapLatitude();
+        int numberOfDaysForecast = 7;
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(ApiUrl.OPEN_WEATHER_API_URL)
+                .append("?lat=")
+                .append(latitude)
+                .append("&lon=")
+                .append(longitude)
+                .append("&cnt=")
+                .append(numberOfDaysForecast)
+                .append("&APPID=")
+                .append(ApiUrl.OPEN_WEATHER_API_KEY);
+
+        return sb.toString();
+
     }
 
 }

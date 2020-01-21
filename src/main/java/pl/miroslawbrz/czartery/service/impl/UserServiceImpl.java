@@ -27,23 +27,24 @@ import static pl.miroslawbrz.czartery.common.ValidationUtils.*;
 public class UserServiceImpl extends AbstractCommonService implements UserService {
 
     private UserRepository userRepository;
+    private Mail mail;
 
     @Autowired
-    public UserServiceImpl(MsgSource msgSource, UserRepository userRepository) {
+    public UserServiceImpl(MsgSource msgSource, UserRepository userRepository, Mail mail) {
         super(msgSource);
         this.userRepository = userRepository;
+        this.mail = mail;
     }
 
 
 
     @Override
-    public ResponseEntity<UserResponse> createUserAndSendMail(CreateUserRequest createUserRequest) {
+    public ResponseEntity<UserResponse> createUser(CreateUserRequest createUserRequest) {
 
         validateCreateUser(createUserRequest);
         checkUserMailAlreadyExist(createUserRequest.getUserMail());
 
         User addedUser = addUserToDB(createUserRequest);
-        Mail.sendEmail(addedUser);
         return ResponseEntity.ok(new UserResponse(msgSource.OK001, addedUser.getUserId()));
     }
 
@@ -63,6 +64,8 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
         }
         return ResponseEntity.ok(userOptional.get());
     }
+
+
 
     @Override
     public ResponseEntity<UserResponse> activateUserInDB(Long id, int hash) {
@@ -97,6 +100,14 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
         getUserById(id); //jeśli nie ma usera o takim id to ERR005
         userRepository.deleteById(id);
         return ResponseEntity.ok(new UserResponse(msgSource.OK004, id));
+    }
+
+    @Override
+    public void sendEmailWithActivationLinkToUser(Long id) {
+        User user = getUserById(id).getBody();
+        if(user!=null) {
+            mail.sendEmail(user);
+        }
     }
 
 
@@ -144,9 +155,4 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
         }
 
     }
-
-
-
-
-
 }

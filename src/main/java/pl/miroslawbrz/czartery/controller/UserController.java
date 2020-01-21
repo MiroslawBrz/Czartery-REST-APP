@@ -9,6 +9,7 @@ import pl.miroslawbrz.czartery.model.User;
 import pl.miroslawbrz.czartery.service.UserService;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/users")
@@ -24,8 +25,9 @@ public class UserController {
 
     @PostMapping(produces = "application/json")
     public ResponseEntity<UserResponse> createUserAccount(@RequestBody CreateUserRequest request){
-
-        return userService.createUserAndSendMail(request);
+        ResponseEntity<UserResponse> responseEntity = userService.createUser(request);
+        userService.sendEmailWithActivationLinkToUser(Objects.requireNonNull(responseEntity.getBody()).getId());
+        return responseEntity;
     }
 
     @GetMapping("/{id}")

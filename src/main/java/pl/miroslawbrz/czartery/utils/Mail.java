@@ -1,5 +1,6 @@
 package pl.miroslawbrz.czartery.utils;
 
+import org.springframework.stereotype.Component;
 import pl.miroslawbrz.czartery.model.User;
 
 import javax.mail.*;
@@ -8,9 +9,10 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 
+@Component
 public class Mail{
 
-    public static void sendEmail(User user){
+    public void sendEmail(User user){
 
         final String username = "test.kurs.123123@gmail.com";
         final String password = "Test1234@";
@@ -47,7 +49,7 @@ public class Mail{
         }
     }
 
-    private static String prepareActivationLink(User user){
+    private String prepareActivationLink(User user){
         return "http://localhost:8080/activateuser/" + user.getActivationHash();
     }
 
