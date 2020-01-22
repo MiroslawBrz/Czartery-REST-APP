@@ -17,4 +17,6 @@ VALUES
 INSERT INTO public.yacht(price_per_day, price_per_week, yacht_capacity, yacht_description,
                          yacht_length, yacht_name, yacht_type, charter_place_id)
 VALUES
-(100.0, 600.0, 6, 'Rodzinny jacht kabinowy', 8.6, 'Szkwał', 'Tango780', 2);
+(120.0, 700.0, 6, 'Rodzinny jacht kabinowy', 8.6, 'Szkwał', 'Tango780', 2),
+(100.0, 600.0, 3, 'Odkrytopokładowa żaglówka', 6.2, 'Pixel', 'Omega', 2),
+(150.0, 800.0, 8, 'Rodzinny jacht kabinowy', 9.1, 'Grażyna', 'Sasanka', 1)

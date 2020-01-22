@@ -21,7 +21,7 @@ public class Yacht {
     double pricePerDay;
     double pricePerWeek;
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "charter_place_id", referencedColumnName = "charterPlaceId")
     CharterPlace charterPlace;
 

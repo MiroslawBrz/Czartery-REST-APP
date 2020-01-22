@@ -23,7 +23,7 @@ public class CharterPlace {
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User user;
     @JsonIgnore
-    @OneToMany(mappedBy = "charterPlace", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "charterPlace")
     private Set<Yacht> yachts;
 
     public static final class Builder{
