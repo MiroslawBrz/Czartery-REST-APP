@@ -2,11 +2,9 @@ package pl.miroslawbrz.czartery.model;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 @Builder
 @Data
-@Component
 public class Weather {
 
     private double minTemperature;

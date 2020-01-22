@@ -43,16 +43,18 @@ public class ExternalApiTest {
     @Test
     void prepareOpenWeatherURLWithFullContentTest(){
 
-        String expectedUrl =
+        String expectedUrl = "http://api.openweathermap.org/data/2.5/forecast?lat=52.279&lon=20.918&APPID=ba17805e18031a0ba390fcfa385254d6";
 
         CharterPlace charterPlace = new CharterPlace();
         CharterPlaceAddress address = new CharterPlaceAddress();
-        address.setMapLatitude(52.28002);
-        address.setMapLongitude(20.91833);
+        address.setMapLatitude(52.279);
+        address.setMapLongitude(20.918);
         charterPlace.setCharterPlaceAddress(address);
 
         ExternalApi externalApi = new ExternalApi();
-        externalApi.prepareOpenWeatherURL(charterPlace);
+        String url = externalApi.prepareOpenWeatherURL(charterPlace);
+
+        Assertions.assertEquals(expectedUrl, url);
 
 
     }

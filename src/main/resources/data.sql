@@ -13,3 +13,8 @@ INSERT INTO public.charter_place (charter_place_name, web_site_url, address_id, 
 VALUES
 ('Warszawski Klub Żeglarski', 'www.wkz.waw.pl', 1, 2),
 ('Płocki Klub Żeglarski', 'zeglarskiploc.pl', 2, 2);
+
+INSERT INTO public.yacht(price_per_day, price_per_week, yacht_capacity, yacht_description,
+                         yacht_length, yacht_name, yacht_type, charter_place_id)
+VALUES
+(100.0, 600.0, 6, 'Rodzinny jacht kabinowy', 8.6, 'Szkwał', 'Tango780', 2);

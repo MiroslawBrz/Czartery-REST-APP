@@ -64,7 +64,6 @@ public class ExternalApi {
 
         double longitude = charterPlace.getCharterPlaceAddress().getMapLongitude();
         double latitude = charterPlace.getCharterPlaceAddress().getMapLatitude();
-        int numberOfDaysForecast = 7;
 
         StringBuilder sb = new StringBuilder();
 
@@ -73,8 +72,6 @@ public class ExternalApi {
                 .append(latitude)
                 .append("&lon=")
                 .append(longitude)
-                .append("&cnt=")
-                .append(numberOfDaysForecast)
                 .append("&APPID=")
                 .append(ApiUrl.OPEN_WEATHER_API_KEY);
 

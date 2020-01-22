@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -21,6 +22,9 @@ public class CharterPlace {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private User user;
+    @JsonIgnore
+    @OneToMany(mappedBy = "charterPlace", cascade = CascadeType.ALL)
+    private Set<Yacht> yachts;
 
     public static final class Builder{
 
