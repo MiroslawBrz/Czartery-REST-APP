@@ -1,7 +1,5 @@
 package pl.miroslawbrz.czartery.controller;
 
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.miroslawbrz.czartery.model.Yacht;
 import pl.miroslawbrz.czartery.service.YachtService;

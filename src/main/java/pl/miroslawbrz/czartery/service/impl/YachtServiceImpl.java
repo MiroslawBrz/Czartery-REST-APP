@@ -7,12 +7,14 @@ import pl.miroslawbrz.czartery.api.request.CreateYachtRequest;
 import pl.miroslawbrz.czartery.api.response.YachtResponse;
 import pl.miroslawbrz.czartery.common.MsgSource;
 import pl.miroslawbrz.czartery.exception.CommonBadRequestException;
+import pl.miroslawbrz.czartery.exception.CommonConflictException;
 import pl.miroslawbrz.czartery.model.Yacht;
 import pl.miroslawbrz.czartery.repository.YachtRepository;
 import pl.miroslawbrz.czartery.service.AbstractCommonService;
 import pl.miroslawbrz.czartery.service.YachtService;
 
 import java.util.List;
+import java.util.Optional;
 
 import static pl.miroslawbrz.czartery.common.ValidationUtils.*;
 
@@ -38,8 +40,41 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
     }
 
     @Override
-    public List<Yacht> getYachtsFromCharterPlace(Long id) {
-        return yachtRepository.getAllByCharterPlace_CharterPlaceId(id);
+    public ResponseEntity<List<Yacht>> getYachtsFromCharterPlace(Long id) {
+        return ResponseEntity.ok(yachtRepository.getAllByCharterPlace_CharterPlaceId(id));
+    }
+
+    @Override
+    public ResponseEntity<YachtResponse> deleteYachtById(Long id) {
+        Yacht yacht = findYachtById(id).getBody();
+        yachtRepository.deleteById(id);
+        assert yacht != null;
+        return ResponseEntity.ok(new YachtResponse(msgSource.OK202, id, yacht.getCharterPlace().getCharterPlaceId()));
+    }
+
+    @Override
+    public ResponseEntity<Yacht> findYachtById(Long id) {
+        Optional<Yacht> yachtOptional = yachtRepository.findById(id);
+        if(!yachtOptional.isPresent()){
+            throw new CommonConflictException(msgSource.ERR201);
+        }
+        return ResponseEntity.ok(yachtOptional.get());
+    }
+
+    @Override
+    public ResponseEntity<YachtResponse> updateYachtData(Long id, CreateYachtRequest request) {
+
+        Yacht yacht = findYachtById(id).getBody();
+        assert yacht != null;
+
+        yacht.setYachtName(request.getYachtName());
+        yacht.setYachtCapacity(request.getYachtCapacity());
+        yacht.setYachtDescription(request.getYachtDescription());
+        yacht.setYachtLength(request.getYachtLength());
+        yacht.setYachtType(request.getYachtType());
+
+        Yacht yachtAfterSave = yachtRepository.save(yacht);
+        return ResponseEntity.ok(new YachtResponse(msgSource.OK203, yachtAfterSave.getId(), yachtAfterSave.getCharterPlace().getCharterPlaceId()));
     }
 
 

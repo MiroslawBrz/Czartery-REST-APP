@@ -11,5 +11,11 @@ public interface YachtService {
 
     public ResponseEntity<YachtResponse> createYacht(CreateYachtRequest yachtRequest, Long charterPlaceId);
 
-    public List<Yacht> getYachtsFromCharterPlace(Long id);
+    public ResponseEntity<List<Yacht>> getYachtsFromCharterPlace(Long id);
+
+    public ResponseEntity<YachtResponse> deleteYachtById(Long id);
+
+    public ResponseEntity<Yacht> findYachtById(Long id);
+
+    public ResponseEntity<YachtResponse> updateYachtData(Long id, CreateYachtRequest request);
 }

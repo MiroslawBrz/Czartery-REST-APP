@@ -17,6 +17,8 @@ public class MsgSource {
     public final String OK105;
 
     public final String OK201;
+    public final String OK202;
+    public final String OK203;
 
     public final ConstErrorMsg ERR001;
     public final ConstErrorMsg ERR002;
@@ -26,6 +28,9 @@ public class MsgSource {
     public final ConstErrorMsg ERR006;
 
     public final ConstErrorMsg ERR101;
+
+    public final ConstErrorMsg ERR201;
+
 
     public MsgSource(
 
@@ -40,6 +45,8 @@ public class MsgSource {
             @Value("${charter.ok.msg.ok105}") String ok105MsgValue,
 
             @Value("${yacht.ok.msg.ok201}") String ok201MsgValue,
+            @Value("${yacht.ok.msg.ok202}") String ok202MsgValue,
+            @Value("${yacht.ok.msg.ok203}") String ok203MsgValue,
 
 
             @Value("${user.const.error.msg.err001}") String err001MsgValue,
@@ -49,7 +56,9 @@ public class MsgSource {
             @Value("${user.const.error.msg.err005}") String err005MsgValue,
             @Value("${user.const.error.msg.err006}") String err006MsgValue,
 
-            @Value("${charter.const.error.msg.err101}") String err101MsgValue
+            @Value("${charter.const.error.msg.err101}") String err101MsgValue,
+
+            @Value("${yacht.const.error.msg.err201}") String err201MsgValue
 
     ){
 
@@ -64,6 +73,8 @@ public class MsgSource {
         OK105 = ok105MsgValue;
 
         OK201 = ok201MsgValue;
+        OK202 = ok202MsgValue;
+        OK203 = ok203MsgValue;
 
         ERR001 = new ConstErrorMsg("ERR001", err001MsgValue);
         ERR002 = new ConstErrorMsg("ERR002", err002MsgValue);
@@ -74,6 +85,6 @@ public class MsgSource {
 
         ERR101 = new ConstErrorMsg("ERR101", err101MsgValue);
 
-
+        ERR201 = new ConstErrorMsg("ERR201", err201MsgValue);
     }
 }
