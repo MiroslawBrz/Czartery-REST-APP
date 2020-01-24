@@ -25,12 +25,10 @@ public class User {
     @NotEmpty
     private String userPassword;
     private boolean userActive;
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private Set<CharterPlace> charterPlaceSet;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_role_id", referencedColumnName = "id")
-    private UserRole userRole;
+
 
     public static final class Builder{
         private String userName = null;
@@ -38,7 +36,6 @@ public class User {
         private String userMail = null;
         private String userPassword = null;
         private Integer userActivationHash = null;
-        private UserRole userRole = null;
 
         public Builder userName(String userName){
             this.userName=userName;
@@ -60,10 +57,6 @@ public class User {
             this.userActivationHash=userActivationHash;
             return this;
         }
-        public Builder userRole(UserRole userRole){
-            this.userRole=userRole;
-            return this;
-        }
 
         public User build(){
             User user = new User();
@@ -72,7 +65,6 @@ public class User {
             user.userMail = this.userMail;
             user.userPassword = this.userPassword;
             user.activationHash = this.userActivationHash;
-            user.userRole=this.userRole;
             return user;
         }
 

@@ -34,14 +34,14 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
 
         validateCreateYacht(yachtRequest);
         Yacht yacht = addYachtToDB(yachtRequest);
-        yachtRepository.insertIntoYachtCharterPlaceId(charterPlaceId, yacht.getId());
+        setRelationWithCharterPlace(yacht, charterPlaceId);
 
         return ResponseEntity.ok(new YachtResponse(msgSource.OK201, yacht.getId(), charterPlaceId));
     }
 
     @Override
     public ResponseEntity<List<Yacht>> getYachtsFromCharterPlace(Long id) {
-        return ResponseEntity.ok(yachtRepository.getAllByCharterPlace_CharterPlaceId(id));
+        return ResponseEntity.ok(yachtRepository.getAllYachtsFromSingleCharterPlace(id));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
         Yacht yacht = findYachtById(id).getBody();
         yachtRepository.deleteById(id);
         assert yacht != null;
-        return ResponseEntity.ok(new YachtResponse(msgSource.OK202, id, yacht.getCharterPlace().getCharterPlaceId()));
+        return ResponseEntity.ok(new YachtResponse(msgSource.OK202, id));
     }
 
     @Override
@@ -66,7 +66,6 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
 
         Yacht yacht = findYachtById(id).getBody();
         assert yacht != null;
-
         yacht.setYachtName(request.getYachtName());
         yacht.setYachtCapacity(request.getYachtCapacity());
         yacht.setYachtDescription(request.getYachtDescription());
@@ -74,8 +73,13 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
         yacht.setYachtType(request.getYachtType());
 
         Yacht yachtAfterSave = yachtRepository.save(yacht);
-        return ResponseEntity.ok(new YachtResponse(msgSource.OK203, yachtAfterSave.getId(), yachtAfterSave.getCharterPlace().getCharterPlaceId()));
+        return ResponseEntity.ok(new YachtResponse(msgSource.OK203, yachtAfterSave.getId()));
     }
+
+    private void setRelationWithCharterPlace(Yacht yacht, Long CharterPlaceId){
+
+    }
+
 
 
     private Yacht addYachtToDB(CreateYachtRequest yachtRequest){
@@ -88,7 +92,7 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
                 .yachtLength(yachtRequest.getYachtLength())
                 .build();
 
-       return yachtRepository.save(yacht);
+        return yachtRepository.save(yacht);
     }
 
     private void validateCreateYacht(CreateYachtRequest yachtRequest){

@@ -20,10 +20,6 @@ public class Yacht {
     double yachtLength;
     double pricePerDay;
     double pricePerWeek;
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "charter_place_id", referencedColumnName = "charterPlaceId")
-    CharterPlace charterPlace;
 
     public static final class Builder{
         String yachtName = null;

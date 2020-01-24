@@ -40,12 +40,6 @@ public class CharterPlaceController {
         return charterPlaceService.getAllCharterPlaces();
     }
 
-    @PutMapping(value = "/{id}/address",produces = "application/json")
-    public ResponseEntity<CharterPlaceResponse> updateCharterPlaceAddress(
-            @PathVariable Long id,
-            @RequestBody CharterPlaceAddress address){
-        return  charterPlaceService.updateCharterPlaceAddress(id, address);
-    }
 
     @PutMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<CharterPlaceResponse> updateCharterPlace(

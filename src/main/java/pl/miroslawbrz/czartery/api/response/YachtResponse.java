@@ -15,6 +15,11 @@ public class YachtResponse extends BasicResponse {
         CharterPlaceId = charterPlaceId;
     }
 
+    public YachtResponse(String responseMessage, Long yachtId) {
+        super(responseMessage);
+        YachtId = yachtId;
+    }
+
     public Long getYachtId() {
         return YachtId;
     }
@@ -30,4 +35,5 @@ public class YachtResponse extends BasicResponse {
     public void setCharterPlaceId(Long charterPlaceId) {
         CharterPlaceId = charterPlaceId;
     }
+
 }

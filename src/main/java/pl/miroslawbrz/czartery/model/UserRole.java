@@ -15,7 +15,8 @@ public class UserRole {
     private Long id;
     private String role;
     private String description;
-    @OneToMany(mappedBy = "userRole")
+    @OneToMany
+    @JoinColumn(name = "user_role_id")
     private Set<User> userSet;
 
 }

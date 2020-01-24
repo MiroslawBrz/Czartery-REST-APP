@@ -19,8 +19,6 @@ public interface CharterPlaceService {
 
     ResponseEntity<CharterPlace> getCharterPlace(Long id);
 
-    ResponseEntity<CharterPlaceResponse> updateCharterPlaceAddress(Long id, CharterPlaceAddress address);
-
     ResponseEntity<CharterPlaceResponse> updateCharterPlaceData(Long id, CreateCharterPlaceRequest request);
 
     ResponseEntity<CharterPlaceResponse> deleteCharterPlace(Long id);

@@ -12,6 +12,7 @@ import pl.miroslawbrz.czartery.exception.CommonConflictException;
 import pl.miroslawbrz.czartery.model.CharterPlace;
 import pl.miroslawbrz.czartery.model.CharterPlaceAddress;
 import pl.miroslawbrz.czartery.model.User;
+import pl.miroslawbrz.czartery.model.Yacht;
 import pl.miroslawbrz.czartery.repository.CharterPlaceRepository;
 import pl.miroslawbrz.czartery.repository.UserRepository;
 import pl.miroslawbrz.czartery.service.AbstractCommonService;
@@ -24,21 +25,17 @@ import static pl.miroslawbrz.czartery.common.ValidationUtils.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CharterPlaceServiceImpl extends AbstractCommonService implements CharterPlaceService {
 
     private CharterPlaceRepository charterPlaceRepository;
-    private UserService userService;
-    private UserRepository userRepository;
 
     @Autowired
-    public CharterPlaceServiceImpl(MsgSource msgSource, CharterPlaceRepository charterPlaceRepository, UserService userService, UserRepository userRepository) {
+    public CharterPlaceServiceImpl(MsgSource msgSource, CharterPlaceRepository charterPlaceRepository) {
         super(msgSource);
         this.charterPlaceRepository = charterPlaceRepository;
-        this.userService = userService;
-        this.userRepository = userRepository;
-
     }
 
 
@@ -46,7 +43,7 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
     public ResponseEntity<CharterPlaceResponse> createCharterPlace(CreateCharterPlaceRequest request) {
 
         validateCreateCharterPlaceRequest(request);
-        CharterPlace addedCharterPlace = addCharterPlaceToDB(request);
+        CharterPlace addedCharterPlace = createCharterPlaceFromRequest(request);
 
         return ResponseEntity.ok(new CharterPlaceResponse(msgSource.OK105, addedCharterPlace.getCharterPlaceId()));
 
@@ -68,27 +65,7 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
         return ResponseEntity.ok(optionalCharterPlace.get());
     }
 
-    @Override
-    public ResponseEntity<CharterPlaceResponse> updateCharterPlaceAddress(Long id, CharterPlaceAddress address) {
 
-        validateCharterPlaceAddress(address);
-        CharterPlace charterPlace = getCharterPlace(id).getBody();
-        assert charterPlace != null;
-
-        CreateCharterPlaceRequest request = new CreateCharterPlaceRequest.Builder()
-                .addressStreet(address.getAddressStreet())
-                .addressCity(address.getAddressCity())
-                .addressBuildingNumber(address.getAddressBuildingNumber())
-                .charterPlaceName(charterPlace.getCharterPlaceName())
-                .build();
-
-        CharterPlace charterPlaceFromRequest = createCharterPlaceFromRequest(request);
-        charterPlace.setCharterPlaceAddress(charterPlaceFromRequest.getCharterPlaceAddress());
-        charterPlaceRepository.save(charterPlace);
-
-        return ResponseEntity.ok(new CharterPlaceResponse(msgSource.OK101, charterPlace.getCharterPlaceId()));
-
-    }
 
     @Override
     public ResponseEntity<CharterPlaceResponse> updateCharterPlaceData(Long id, CreateCharterPlaceRequest request) {
@@ -96,8 +73,9 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
         validateCreateCharterPlaceRequest(request);
         CharterPlace charterPlace = createCharterPlaceFromRequest(request);
         charterPlace.setCharterPlaceId(id);
-        charterPlaceRepository.save(charterPlace);
-        return ResponseEntity.ok(new CharterPlaceResponse(msgSource.OK103, id));
+        CharterPlace charterAfterSave = charterPlaceRepository.save(charterPlace);
+        setRelationWithUser(charterAfterSave, request.getUserId());
+        return ResponseEntity.ok(new CharterPlaceResponse(msgSource.OK103, charterAfterSave.getCharterPlaceId()));
 
     }
 
@@ -118,24 +96,17 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
         }
     }
 
-    private void validateCharterPlaceAddress(CharterPlaceAddress address){
-        if(isNullOrEmpty(address.getAddressBuildingNumber())
-        ||isNullOrEmpty(address.getAddressCity())
-        ||isNullOrEmpty(address.getAddressStreet())){
-            throw new CommonBadRequestException(msgSource.ERR001);
-        }
-    }
 
-    private CharterPlace addCharterPlaceToDB(CreateCharterPlaceRequest request){
+    private void setRelationWithUser(CharterPlace charterPlace, Long userId){
 
-        return createCharterPlaceFromRequest(request);
+        Long charterPlaceId = charterPlace.getCharterPlaceId();
+        charterPlaceRepository.setRelationWithUser(userId, charterPlaceId);
 
     }
 
     private CharterPlace createCharterPlaceFromRequest(CreateCharterPlaceRequest request){
 
         CharterPlaceAddress charterPlaceAddress = AddressJsonParse.getFullAddressAndCoordinatesFromRequest(request);
-        User user = userService.getUserById(request.getUserId()).getBody();
 
         CharterPlace charterPlace = new CharterPlace.Builder()
                 .charterPlaceAddress(charterPlaceAddress)
@@ -143,14 +114,6 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
                 .charterPlaceName(request.getCharterPlaceName())
                 .build();
 
-
-        assert user != null;
-        user.getCharterPlaceSet().add(charterPlace);
-        User userAfterSave = userRepository.save(user);
-        CharterPlace charterPlaceAfterSave = userAfterSave.getCharterPlaceSet().stream().filter(x -> x.getWebSiteUrl().equals(charterPlace.getWebSiteUrl())).findFirst().get();
-        charterPlaceRepository.insertIntoCharterPlaceUserId(userAfterSave.getUserId(), charterPlaceAfterSave.getCharterPlaceId());
-        return  charterPlaceAfterSave;
-
-
+        return charterPlace;
     }
 }

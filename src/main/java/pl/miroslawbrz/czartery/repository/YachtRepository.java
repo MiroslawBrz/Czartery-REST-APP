@@ -13,11 +13,7 @@ import java.util.List;
 @Repository
 public interface YachtRepository extends JpaRepository<Yacht, Long> {
 
-    @Transactional
-    @Modifying
-    @Query(value = "UPDATE yacht SET charter_place_id = ?1 WHERE id = ?2", nativeQuery = true)
-    void insertIntoYachtCharterPlaceId(Long charterPlaceId, Long id);
-
-    List<Yacht> getAllByCharterPlace_CharterPlaceId(Long id);
+    @Query(value = "SELECT * FROM Yacht WHERE charter_place_id=?", nativeQuery = true)
+    List<Yacht> getAllYachtsFromSingleCharterPlace(Long charterPlaceId);
 
 }

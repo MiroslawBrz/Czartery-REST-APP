@@ -17,13 +17,10 @@ public class CharterPlace {
     private String charterPlaceName;
     private String webSiteUrl;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "addressId")
+    @JoinColumn(name = "charter_place_id")
     private CharterPlaceAddress charterPlaceAddress;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "userId")
-    private User user;
-    @JsonIgnore
-    @OneToMany(mappedBy = "charterPlace")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "charter_place_id")
     private Set<Yacht> yachts;
 
     public static final class Builder{
@@ -31,7 +28,6 @@ public class CharterPlace {
         private String charterPlaceName = null;
         private String webSiteUrl = null;
         private CharterPlaceAddress charterPlaceAddress = null;
-        private User user = null;
 
         public Builder charterPlaceName(String charterPlaceName){
             this.charterPlaceName = charterPlaceName;
@@ -45,16 +41,12 @@ public class CharterPlace {
             this.charterPlaceAddress = charterPlaceAddress;
             return this;
         }
-        public Builder user(User user){
-            this.user = user;
-            return this;
-        }
+
         public CharterPlace build(){
             CharterPlace charterPlace = new CharterPlace();
             charterPlace.charterPlaceName = this.charterPlaceName;
             charterPlace.charterPlaceAddress = this.charterPlaceAddress;
             charterPlace.webSiteUrl = this.webSiteUrl;
-            charterPlace.user = this.user;
 
             return charterPlace;
         }
