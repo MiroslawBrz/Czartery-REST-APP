@@ -28,6 +28,10 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Set<CharterPlace> charterPlaceSet;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private Set<ReservationDetails> reservationDetails;
 
 
     public static final class Builder{

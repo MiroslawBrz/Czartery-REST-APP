@@ -19,6 +19,7 @@ public class CharterPlace {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "charter_place_id")
     private CharterPlaceAddress charterPlaceAddress;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "charter_place_id")
     private Set<Yacht> yachts;

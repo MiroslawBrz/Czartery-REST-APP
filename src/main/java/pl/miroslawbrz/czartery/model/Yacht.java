@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -20,6 +21,10 @@ public class Yacht {
     double yachtLength;
     double pricePerDay;
     double pricePerWeek;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "yacht_id")
+    private Set<ReservationDetails> reservationDetails;
 
     public static final class Builder{
         String yachtName = null;
