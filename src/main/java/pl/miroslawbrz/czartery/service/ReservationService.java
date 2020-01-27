@@ -7,19 +7,21 @@ import pl.miroslawbrz.czartery.model.ReservationDetails;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public interface ReservationService {
 
-    ResponseEntity<List<LocalDate>> getAllReservedDays(Long yachtId);
+    ResponseEntity<List<LocalDate>> getAllReservedDaysOfYacht(Long yachtId);
 
-    ResponseEntity<ReservationResponse> addReservation();
+    ResponseEntity<List<ReservationDetails>> getAllReservations();
 
-    ResponseEntity<ReservationResponse> changeReservation();
+    ResponseEntity<ReservationResponse> addReservation(CreateReservationRequest request, Long yachtId);
 
-    ResponseEntity<ReservationDetails> getReservationDetails();
+    ResponseEntity<ReservationResponse> changeReservation(Long reservationId, CreateReservationRequest request);
 
-    ResponseEntity<ReservationResponse> deleteReservation();
+    ResponseEntity<ReservationDetails> getReservationDetails(Long reservationId);
 
+    ResponseEntity<ReservationResponse> deleteReservation(Long reservationId);
 
 
 }

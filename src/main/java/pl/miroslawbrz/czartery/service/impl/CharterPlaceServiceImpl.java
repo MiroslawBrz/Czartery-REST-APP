@@ -108,12 +108,10 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
 
         CharterPlaceAddress charterPlaceAddress = AddressJsonParse.getFullAddressAndCoordinatesFromRequest(request);
 
-        CharterPlace charterPlace = new CharterPlace.Builder()
+        return new CharterPlace.Builder()
                 .charterPlaceAddress(charterPlaceAddress)
                 .webSiteUrl(request.getWebSiteUrl())
                 .charterPlaceName(request.getCharterPlaceName())
                 .build();
-
-        return charterPlace;
     }
 }

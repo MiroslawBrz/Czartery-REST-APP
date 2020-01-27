@@ -1,5 +1,7 @@
 package pl.miroslawbrz.czartery.model;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,6 +10,7 @@ import java.time.LocalDate;
 
 
 @Entity
+@Data
 public class ReservationDetails {
 
     @Id
@@ -16,5 +19,11 @@ public class ReservationDetails {
     private LocalDate localDate;
     private int reservationLength;
     private boolean paid;
+
+    public static final class Builder{
+
+
+
+    }
 
 }
