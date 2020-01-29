@@ -8,12 +8,16 @@ import pl.miroslawbrz.czartery.api.response.ReservationResponse;
 import pl.miroslawbrz.czartery.common.MsgSource;
 import pl.miroslawbrz.czartery.exception.CommonBadRequestException;
 import pl.miroslawbrz.czartery.exception.CommonConflictException;
+import pl.miroslawbrz.czartery.model.CharterPlace;
 import pl.miroslawbrz.czartery.model.ReservationDetails;
+import pl.miroslawbrz.czartery.model.User;
 import pl.miroslawbrz.czartery.model.Yacht;
 import pl.miroslawbrz.czartery.repository.ReservationRepository;
+import pl.miroslawbrz.czartery.repository.UserRepository;
 import pl.miroslawbrz.czartery.repository.YachtRepository;
 import pl.miroslawbrz.czartery.service.AbstractCommonService;
 import pl.miroslawbrz.czartery.service.ReservationService;
+import pl.miroslawbrz.czartery.utils.UserUtilities;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,12 +31,14 @@ public class ReservationServiceImpl extends AbstractCommonService implements Res
 
     private ReservationRepository reservationRepository;
     private YachtRepository yachtRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public ReservationServiceImpl(MsgSource msgSource, ReservationRepository reservationRepository, YachtRepository yachtRepository) {
+    public ReservationServiceImpl(MsgSource msgSource, ReservationRepository reservationRepository, YachtRepository yachtRepository, UserRepository userRepository) {
         super(msgSource);
         this.reservationRepository = reservationRepository;
         this.yachtRepository = yachtRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -60,14 +66,15 @@ public class ReservationServiceImpl extends AbstractCommonService implements Res
     }
 
     @Override
-    public ResponseEntity<ReservationResponse> addReservation(CreateReservationRequest request, Long YachtId) {
+    public ResponseEntity<ReservationResponse> addReservation(CreateReservationRequest request, Long yachtId) {
 
         createReservationRequestValidate(request);
         checkIfBookingHasCorrectDate(request);
         checkIfBookingWithinThisPeriodIsPossible(request);
         ReservationDetails reservationDetails = createReservationDetailsFromRequest(request);
         ReservationDetails reservationAfterSave = reservationRepository.save(reservationDetails);
-
+        setRelationWithUser(reservationAfterSave);
+        setRelationWithYacht(reservationAfterSave, yachtId);
 
         return ResponseEntity.ok(new ReservationResponse(msgSource.OK301, reservationAfterSave.getReservationId()));
 
@@ -79,7 +86,7 @@ public class ReservationServiceImpl extends AbstractCommonService implements Res
         createReservationRequestValidate(request);
         checkIfBookingHasCorrectDate(request);
         checkIfBookingWithinThisPeriodIsPossible(request);
-
+        checkIfReservationBelongsToLoggedUser(reservationId);
         ReservationDetails oldReservation = getReservationDetails(reservationId).getBody();
 
         assert oldReservation != null;
@@ -106,8 +113,9 @@ public class ReservationServiceImpl extends AbstractCommonService implements Res
 
     @Override
     public ResponseEntity<ReservationResponse> deleteReservation(Long reservationId) {
-        getReservationDetails(reservationId);
 
+        getReservationDetails(reservationId);
+        checkIfReservationBelongsToLoggedUser(reservationId);
         reservationRepository.deleteById(reservationId);
 
         Optional<ReservationDetails> optional = reservationRepository.findById(reservationId);
@@ -183,6 +191,31 @@ public class ReservationServiceImpl extends AbstractCommonService implements Res
         reservationDetails.setReservationLength(request.getReservationLength());
 
         return reservationDetails;
+
+    }
+
+    private void setRelationWithUser(ReservationDetails reservationDetails){
+
+        User user = userRepository.findByUserMail(UserUtilities.getLoggedUser());
+        Long reservationId = reservationDetails.getReservationId();
+        reservationRepository.setRelationWithUser(user.getUserId(), reservationId);
+
+    }
+
+    private void setRelationWithYacht(ReservationDetails reservationDetails, Long yachtId){
+
+        reservationRepository.setRelationWithYacht(yachtId, reservationDetails.getReservationId());
+    }
+
+    private void checkIfReservationBelongsToLoggedUser(Long reservationId){
+
+        User user = userRepository.findByUserMail(UserUtilities.getLoggedUser());
+
+        Optional<ReservationDetails> charterPlaceOptional = user.getReservationDetails().stream()
+                .filter(x -> x.getReservationId().equals(reservationId)).findFirst();
+        if(!charterPlaceOptional.isPresent()){
+            throw new CommonBadRequestException(msgSource.ERR305);
+        }
 
     }
 

@@ -16,6 +16,7 @@ import pl.miroslawbrz.czartery.service.AbstractCommonService;
 import pl.miroslawbrz.czartery.service.CharterPlaceService;
 import pl.miroslawbrz.czartery.service.UserService;
 import pl.miroslawbrz.czartery.utils.AddressJsonParse;
+import pl.miroslawbrz.czartery.utils.UserUtilities;
 
 import static pl.miroslawbrz.czartery.common.ValidationUtils.*;
 
@@ -28,11 +29,13 @@ import java.util.Set;
 public class CharterPlaceServiceImpl extends AbstractCommonService implements CharterPlaceService {
 
     private CharterPlaceRepository charterPlaceRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public CharterPlaceServiceImpl(MsgSource msgSource, CharterPlaceRepository charterPlaceRepository) {
+    public CharterPlaceServiceImpl(MsgSource msgSource, CharterPlaceRepository charterPlaceRepository, UserRepository userRepository) {
         super(msgSource);
         this.charterPlaceRepository = charterPlaceRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -41,6 +44,7 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
 
         validateCreateCharterPlaceRequest(request);
         CharterPlace addedCharterPlace = createCharterPlaceFromRequest(request);
+        setRelationWithUser(addedCharterPlace);
 
         return ResponseEntity.ok(new CharterPlaceResponse(msgSource.OK105, addedCharterPlace.getCharterPlaceId()));
 
@@ -68,10 +72,11 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
     public ResponseEntity<CharterPlaceResponse> updateCharterPlaceData(Long id, CreateCharterPlaceRequest request) {
 
         validateCreateCharterPlaceRequest(request);
+        checkIfCharterPlaceBelongsToLoggedUser(id);
         CharterPlace charterPlace = createCharterPlaceFromRequest(request);
         charterPlace.setCharterPlaceId(id);
         CharterPlace charterAfterSave = charterPlaceRepository.save(charterPlace);
-        setRelationWithUser(charterAfterSave, request.getUserId());
+        setRelationWithUser(charterAfterSave);
         return ResponseEntity.ok(new CharterPlaceResponse(msgSource.OK103, charterAfterSave.getCharterPlaceId()));
 
     }
@@ -80,6 +85,7 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
     @Transactional
     public ResponseEntity<CharterPlaceResponse> deleteCharterPlace(Long id) {
         getCharterPlace(id);
+        checkIfCharterPlaceBelongsToLoggedUser(id);
         charterPlaceRepository.deleteById(id);
         return ResponseEntity.ok(new CharterPlaceResponse(msgSource.OK102, id));
     }
@@ -99,10 +105,23 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
     }
 
 
-    private void setRelationWithUser(CharterPlace charterPlace, Long userId){
+    private void setRelationWithUser(CharterPlace charterPlace){
 
+        User user = userRepository.findByUserMail(UserUtilities.getLoggedUser());
         Long charterPlaceId = charterPlace.getCharterPlaceId();
-        charterPlaceRepository.setRelationWithUser(userId, charterPlaceId);
+        charterPlaceRepository.setRelationWithUser(user.getUserId(), charterPlaceId);
+
+    }
+
+    public void checkIfCharterPlaceBelongsToLoggedUser(Long charterPlaceId){
+
+        User user = userRepository.findByUserMail(UserUtilities.getLoggedUser());
+
+        Optional<CharterPlace> charterPlaceOptional = user.getCharterPlaceSet().stream()
+                .filter(x -> x.getCharterPlaceId().equals(charterPlaceId)).findFirst();
+        if(!charterPlaceOptional.isPresent()){
+            throw new CommonBadRequestException(msgSource.ERR102);
+        }
 
     }
 

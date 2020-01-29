@@ -9,6 +9,7 @@ import pl.miroslawbrz.czartery.common.MsgSource;
 import pl.miroslawbrz.czartery.exception.CommonBadRequestException;
 import pl.miroslawbrz.czartery.exception.CommonConflictException;
 import pl.miroslawbrz.czartery.model.Yacht;
+import pl.miroslawbrz.czartery.repository.UserRepository;
 import pl.miroslawbrz.czartery.repository.YachtRepository;
 import pl.miroslawbrz.czartery.service.AbstractCommonService;
 import pl.miroslawbrz.czartery.service.CharterPlaceService;
@@ -16,7 +17,6 @@ import pl.miroslawbrz.czartery.service.YachtService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static pl.miroslawbrz.czartery.common.ValidationUtils.*;
@@ -39,6 +39,7 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
 
         validateCreateYacht(yachtRequest);
         Yacht yacht = addYachtToDB(yachtRequest);
+        charterPlaceService.checkIfCharterPlaceBelongsToLoggedUser(charterPlaceId);
         setRelationWithCharterPlace(yacht, charterPlaceId);
 
         return ResponseEntity.ok(new YachtResponse(msgSource.OK201, yacht.getId(), charterPlaceId));
@@ -84,6 +85,7 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
     @Override
     public ResponseEntity<YachtResponse> changePricePerDay(Long yachtId, double price) {
 
+        validatePrice(price);
         Yacht yacht = findYachtById(yachtId).getBody();
         assert yacht != null;
         yacht.setPricePerDay(price);
@@ -95,6 +97,7 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
     @Override
     public ResponseEntity<YachtResponse> changePricePerWeek(Long yachtId, double price) {
 
+        validatePrice(price);
         Yacht yacht = findYachtById(yachtId).getBody();
         assert yacht != null;
         yacht.setPricePerWeek(price);
@@ -107,6 +110,7 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
     public ResponseEntity<List<YachtResponse>> giveDiscountForAllYachtsInSingleCharterPlace(Long charterPlaceId, double discountInPercents) {
 
         charterPlaceService.getCharterPlace(charterPlaceId);
+        charterPlaceService.checkIfCharterPlaceBelongsToLoggedUser(charterPlaceId);
         validateDiscount(discountInPercents);
 
         List<Yacht> yachtList = getYachtsFromCharterPlace(charterPlaceId).getBody();
@@ -126,7 +130,9 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
     }
 
     private void setRelationWithCharterPlace(Yacht yacht, Long charterPlaceId){
+
         charterPlaceService.getCharterPlace(charterPlaceId);
+        charterPlaceService.checkIfCharterPlaceBelongsToLoggedUser(charterPlaceId);
         yachtRepository.setRelationWithCharterPlace(yacht.getId(), charterPlaceId);
     }
 

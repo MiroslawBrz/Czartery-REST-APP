@@ -26,4 +26,6 @@ public interface CharterPlaceService {
 
     ResponseEntity<List<Weather>> showWeatherForecastInCharterPlace(Long charterPlaceId);
 
+    void checkIfCharterPlaceBelongsToLoggedUser(Long charterPlaceId);
+
 }

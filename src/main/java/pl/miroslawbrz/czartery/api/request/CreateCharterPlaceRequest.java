@@ -11,7 +11,6 @@ public class CreateCharterPlaceRequest {
     private String addressStreet;
     private String addressBuildingNumber;
     private String addressCity;
-    private Long userId;
 
     public static final class Builder{
 
@@ -20,7 +19,6 @@ public class CreateCharterPlaceRequest {
         private String addressStreet = null;
         private String addressCity = null;
         private String addressBuildingNumber = null;
-        private Long userId = null;
 
 
         public Builder charterPlaceName(String charterPlaceName){
@@ -43,10 +41,7 @@ public class CreateCharterPlaceRequest {
             this.addressBuildingNumber = addressBuildingNumber;
             return this;
         }
-        public Builder userId(Long userId){
-            this.userId = userId;
-            return this;
-        }
+
 
         public CreateCharterPlaceRequest build(){
             CreateCharterPlaceRequest createCharterPlaceRequest = new CreateCharterPlaceRequest();
@@ -55,7 +50,6 @@ public class CreateCharterPlaceRequest {
             createCharterPlaceRequest.addressStreet = this.addressStreet;
             createCharterPlaceRequest.addressCity = this.addressCity;
             createCharterPlaceRequest.addressBuildingNumber = this.addressBuildingNumber;
-            createCharterPlaceRequest.userId = this.userId;
             return createCharterPlaceRequest;
         }
 
