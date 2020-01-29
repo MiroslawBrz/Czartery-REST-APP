@@ -8,6 +8,7 @@ import pl.miroslawbrz.czartery.api.response.UserResponse;
 import pl.miroslawbrz.czartery.model.CharterPlace;
 import pl.miroslawbrz.czartery.model.CharterPlaceAddress;
 import pl.miroslawbrz.czartery.model.User;
+import pl.miroslawbrz.czartery.model.Weather;
 
 import java.util.List;
 
@@ -22,5 +23,7 @@ public interface CharterPlaceService {
     ResponseEntity<CharterPlaceResponse> updateCharterPlaceData(Long id, CreateCharterPlaceRequest request);
 
     ResponseEntity<CharterPlaceResponse> deleteCharterPlace(Long id);
+
+    ResponseEntity<List<Weather>> showWeatherForecastInCharterPlace(Long charterPlaceId);
 
 }

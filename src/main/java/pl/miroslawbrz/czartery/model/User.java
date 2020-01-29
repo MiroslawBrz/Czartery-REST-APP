@@ -32,6 +32,8 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Set<ReservationDetails> reservationDetails;
+    @ManyToMany
+    private Set<UserRole> userRoles;
 
 
     public static final class Builder{

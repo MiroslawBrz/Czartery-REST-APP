@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.miroslawbrz.czartery.api.request.CreateCharterPlaceRequest;
 import pl.miroslawbrz.czartery.api.response.CharterPlaceResponse;
 import pl.miroslawbrz.czartery.model.CharterPlace;
-import pl.miroslawbrz.czartery.model.CharterPlaceAddress;
 import pl.miroslawbrz.czartery.service.CharterPlaceService;
 
 import java.util.List;

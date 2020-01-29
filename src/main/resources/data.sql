@@ -3,11 +3,11 @@ INSERT INTO public.user_roles (description, role) VALUES
 ('User', 'USER_ROLE');
 
 
-INSERT INTO public.charter_user (user_name, user_last_name, user_mail, user_password, user_active, activation_hash, user_role_id)
+INSERT INTO public.charter_user (user_name, user_last_name, user_mail, user_password, user_active, activation_hash)
 VALUES
-('Adam', 'Kowalski', 'adamkowalski@buziaczek.com', 'krjsHgr89824vjh#bt58', true, 987, 1),
-('Janusz', 'Nosacz', 'janusz@gmail.com','iuuh#sD9361/di8v', false, 789, 2),
-('Jan', 'Nowak', 'nowak@wp.pl', 'sdvs8F10vb!dbrd', true, 456, 2);
+('Adam', 'Kowalski', 'adamkowalski@buziaczek.com', 'krjsHgr89824vjh#bt58', true, 987),
+('Janusz', 'Nosacz', 'janusz@gmail.com','iuuh#sD9361/di8v', false, 789),
+('Jan', 'Nowak', 'nowak@wp.pl', 'sdvs8F10vb!dbrd', true, 456);
 
 INSERT INTO public.charter_place_address (address_building_number, address_city, address_postal_code, address_street, map_latitude, map_longitude)
 VALUES

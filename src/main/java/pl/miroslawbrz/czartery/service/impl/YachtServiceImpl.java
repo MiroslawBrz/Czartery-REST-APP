@@ -11,10 +11,13 @@ import pl.miroslawbrz.czartery.exception.CommonConflictException;
 import pl.miroslawbrz.czartery.model.Yacht;
 import pl.miroslawbrz.czartery.repository.YachtRepository;
 import pl.miroslawbrz.czartery.service.AbstractCommonService;
+import pl.miroslawbrz.czartery.service.CharterPlaceService;
 import pl.miroslawbrz.czartery.service.YachtService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static pl.miroslawbrz.czartery.common.ValidationUtils.*;
 
@@ -22,11 +25,13 @@ import static pl.miroslawbrz.czartery.common.ValidationUtils.*;
 public class YachtServiceImpl extends AbstractCommonService implements YachtService {
 
     private YachtRepository yachtRepository;
+    private CharterPlaceService charterPlaceService;
 
     @Autowired
-    public YachtServiceImpl(MsgSource msgSource, YachtRepository yachtRepository) {
+    public YachtServiceImpl(MsgSource msgSource, YachtRepository yachtRepository, CharterPlaceService charterPlaceService) {
         super(msgSource);
         this.yachtRepository = yachtRepository;
+        this.charterPlaceService = charterPlaceService;
     }
 
     @Override
@@ -76,11 +81,54 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
         return ResponseEntity.ok(new YachtResponse(msgSource.OK203, yachtAfterSave.getId()));
     }
 
-    private void setRelationWithCharterPlace(Yacht yacht, Long CharterPlaceId){
+    @Override
+    public ResponseEntity<YachtResponse> changePricePerDay(Long yachtId, double price) {
+
+        Yacht yacht = findYachtById(yachtId).getBody();
+        assert yacht != null;
+        yacht.setPricePerDay(price);
+        Yacht yachtAfterSave = yachtRepository.save(yacht);
+        return ResponseEntity.ok(new YachtResponse(msgSource.OK204, yachtAfterSave.getId()));
 
     }
 
+    @Override
+    public ResponseEntity<YachtResponse> changePricePerWeek(Long yachtId, double price) {
 
+        Yacht yacht = findYachtById(yachtId).getBody();
+        assert yacht != null;
+        yacht.setPricePerWeek(price);
+        Yacht yachtAfterSave = yachtRepository.save(yacht);
+        return ResponseEntity.ok(new YachtResponse(msgSource.OK204, yachtAfterSave.getId()));
+
+    }
+
+    @Override
+    public ResponseEntity<List<YachtResponse>> giveDiscountForAllYachtsInSingleCharterPlace(Long charterPlaceId, double discountInPercents) {
+
+        charterPlaceService.getCharterPlace(charterPlaceId);
+        validateDiscount(discountInPercents);
+
+        List<Yacht> yachtList = getYachtsFromCharterPlace(charterPlaceId).getBody();
+
+        assert yachtList != null;
+        yachtList.forEach(yacht -> {
+            yacht.setPricePerWeek(yacht.getPricePerWeek()*(1-(discountInPercents/100)));
+            yacht.setPricePerDay(yacht.getPricePerDay()*(1-(discountInPercents/100)));
+        });
+
+        List<Yacht> yachtsAfterSave = yachtRepository.saveAll(yachtList);
+
+        List<YachtResponse> yachtResponses = yachtsAfterSave.stream()
+                .map(Yacht::getId).map(x -> new YachtResponse(msgSource.OK204, x)).collect(Collectors.toList());
+
+        return ResponseEntity.ok(yachtResponses);
+    }
+
+    private void setRelationWithCharterPlace(Yacht yacht, Long charterPlaceId){
+        charterPlaceService.getCharterPlace(charterPlaceId);
+        yachtRepository.setRelationWithCharterPlace(yacht.getId(), charterPlaceId);
+    }
 
     private Yacht addYachtToDB(CreateYachtRequest yachtRequest){
 
@@ -103,6 +151,20 @@ public class YachtServiceImpl extends AbstractCommonService implements YachtServ
                 || yachtRequest.getYachtLength()==0.0) {
 
             throw new CommonBadRequestException(msgSource.ERR001);
+        }
+    }
+
+    private void validateDiscount(double discount){
+        if(discount>= 100.0
+        || discount <=0){
+            throw new CommonBadRequestException(msgSource.ERR202);
+        }
+    }
+
+    private void validatePrice(double price){
+
+        if(price < 0){
+            throw new CommonBadRequestException(msgSource.ERR203);
         }
 
     }

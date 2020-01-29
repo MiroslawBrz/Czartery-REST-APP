@@ -45,4 +45,20 @@ public class YachtController {
         return yachtService.deleteYachtById(yachtId);
     }
 
+    @PutMapping("yachts/{yachtId}/price/day/{price}")
+    public ResponseEntity<YachtResponse> changePricePerDay(@PathVariable Long yachtId, @PathVariable double price){
+        return yachtService.changePricePerDay(yachtId, price);
+    }
+
+    @PutMapping("yachts/{yachtId}/price/week/{price}")
+    public ResponseEntity<YachtResponse> changePricePerWeek(@PathVariable Long yachtId, @PathVariable double price){
+        return yachtService.changePricePerWeek(yachtId, price);
+    }
+
+    @PutMapping("/{charterPlaceId}/yachts/discount/{discount}")
+    public ResponseEntity<List<YachtResponse>> giveDiscountForAllYachtFromCharterPlace(
+            @PathVariable Long charterPlaceId, @PathVariable double discount){
+        return yachtService.giveDiscountForAllYachtsInSingleCharterPlace(charterPlaceId, discount);
+    }
+
 }

@@ -9,10 +9,7 @@ import pl.miroslawbrz.czartery.api.response.CharterPlaceResponse;
 import pl.miroslawbrz.czartery.common.MsgSource;
 import pl.miroslawbrz.czartery.exception.CommonBadRequestException;
 import pl.miroslawbrz.czartery.exception.CommonConflictException;
-import pl.miroslawbrz.czartery.model.CharterPlace;
-import pl.miroslawbrz.czartery.model.CharterPlaceAddress;
-import pl.miroslawbrz.czartery.model.User;
-import pl.miroslawbrz.czartery.model.Yacht;
+import pl.miroslawbrz.czartery.model.*;
 import pl.miroslawbrz.czartery.repository.CharterPlaceRepository;
 import pl.miroslawbrz.czartery.repository.UserRepository;
 import pl.miroslawbrz.czartery.service.AbstractCommonService;
@@ -85,6 +82,11 @@ public class CharterPlaceServiceImpl extends AbstractCommonService implements Ch
         getCharterPlace(id);
         charterPlaceRepository.deleteById(id);
         return ResponseEntity.ok(new CharterPlaceResponse(msgSource.OK102, id));
+    }
+
+    @Override
+    public ResponseEntity<List<Weather>> showWeatherForecastInCharterPlace(Long charterPlaceId) {
+        return null;
     }
 
     private void validateCreateCharterPlaceRequest(CreateCharterPlaceRequest request){

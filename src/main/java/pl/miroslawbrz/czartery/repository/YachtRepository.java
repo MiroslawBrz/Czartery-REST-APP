@@ -16,4 +16,9 @@ public interface YachtRepository extends JpaRepository<Yacht, Long> {
     @Query(value = "SELECT * FROM Yacht WHERE charter_place_id=?", nativeQuery = true)
     List<Yacht> getAllYachtsFromSingleCharterPlace(Long charterPlaceId);
 
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE public.yacht SET charter_place_id = ?1 WHERE id=?2", nativeQuery = true)
+    void setRelationWithCharterPlace(Long charterPlaceId, Long id);
+
 }

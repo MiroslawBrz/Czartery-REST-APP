@@ -9,13 +9,19 @@ import java.util.List;
 
 public interface YachtService {
 
-    public ResponseEntity<YachtResponse> createYacht(CreateYachtRequest yachtRequest, Long charterPlaceId);
+    ResponseEntity<YachtResponse> createYacht(CreateYachtRequest yachtRequest, Long charterPlaceId);
 
-    public ResponseEntity<List<Yacht>> getYachtsFromCharterPlace(Long id);
+    ResponseEntity<List<Yacht>> getYachtsFromCharterPlace(Long id);
 
-    public ResponseEntity<YachtResponse> deleteYachtById(Long id);
+    ResponseEntity<YachtResponse> deleteYachtById(Long id);
 
-    public ResponseEntity<Yacht> findYachtById(Long id);
+    ResponseEntity<Yacht> findYachtById(Long id);
 
-    public ResponseEntity<YachtResponse> updateYachtData(Long id, CreateYachtRequest request);
+    ResponseEntity<YachtResponse> updateYachtData(Long id, CreateYachtRequest request);
+
+    ResponseEntity<YachtResponse> changePricePerDay(Long yachtId, double price);
+
+    ResponseEntity<YachtResponse> changePricePerWeek(Long yachtId, double price);
+
+    ResponseEntity<List<YachtResponse>> giveDiscountForAllYachtsInSingleCharterPlace(Long charterPlaceId, double discountInPercents);
 }

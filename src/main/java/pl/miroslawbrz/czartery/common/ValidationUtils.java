@@ -18,4 +18,5 @@ public class ValidationUtils {
         Matcher m = p.matcher(inputString);
         return m.matches();
     }
+
 }

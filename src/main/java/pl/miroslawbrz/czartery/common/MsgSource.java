@@ -19,6 +19,7 @@ public class MsgSource {
     public final String OK201;
     public final String OK202;
     public final String OK203;
+    public final String OK204;
 
     public final String OK301;
     public final String OK302;
@@ -34,6 +35,8 @@ public class MsgSource {
     public final ConstErrorMsg ERR101;
 
     public final ConstErrorMsg ERR201;
+    public final ConstErrorMsg ERR202;
+    public final ConstErrorMsg ERR203;
 
     public final ConstErrorMsg ERR301;
     public final ConstErrorMsg ERR302;
@@ -56,6 +59,7 @@ public class MsgSource {
             @Value("${yacht.ok.msg.ok201}") String ok201MsgValue,
             @Value("${yacht.ok.msg.ok202}") String ok202MsgValue,
             @Value("${yacht.ok.msg.ok203}") String ok203MsgValue,
+            @Value("${yacht.ok.msg.ok204}") String ok204MsgValue,
 
             @Value("${reservation.ok.msg.ok301}") String ok301MsgValue,
             @Value("${reservation.ok.msg.ok302}") String ok302MsgValue,
@@ -72,6 +76,8 @@ public class MsgSource {
             @Value("${charter.const.error.msg.err101}") String err101MsgValue,
 
             @Value("${yacht.const.error.msg.err201}") String err201MsgValue,
+            @Value("${yacht.const.error.msg.err202}") String err202MsgValue,
+            @Value("${yacht.const.error.msg.err203}") String err203MsgValue,
 
             @Value("${reservation.const.error.msg.err301}") String err301MsgValue,
             @Value("${reservation.const.error.msg.err302}") String err302MsgValue,
@@ -93,6 +99,7 @@ public class MsgSource {
         OK201 = ok201MsgValue;
         OK202 = ok202MsgValue;
         OK203 = ok203MsgValue;
+        OK204 = ok204MsgValue;
 
         OK301 = ok301MsgValue;
         OK302 = ok302MsgValue;
@@ -108,6 +115,8 @@ public class MsgSource {
         ERR101 = new ConstErrorMsg("ERR101", err101MsgValue);
 
         ERR201 = new ConstErrorMsg("ERR201", err201MsgValue);
+        ERR202 = new ConstErrorMsg("ERR202", err202MsgValue);
+        ERR203 = new ConstErrorMsg("ERR203", err203MsgValue);
 
         ERR301 = new ConstErrorMsg("ERR301", err301MsgValue);
         ERR302 = new ConstErrorMsg("ERR302", err302MsgValue);
