@@ -15,12 +15,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-public class CustomUserDetailSevice implements UserDetailsService {
+public class CustomUserDetailService implements UserDetailsService {
 
     private UserRepository userRepository;
 
     @Autowired
-    public CustomUserDetailSevice(UserRepository userRepository){
+    public CustomUserDetailService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 

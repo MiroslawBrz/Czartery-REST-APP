@@ -1,46 +1,73 @@
 package pl.miroslawbrz.czartery.api.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import pl.miroslawbrz.czartery.api.request.UsernameAndPasswordAuthenticationRequest;
 
+import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
 
-public class JwtFilter extends BasicAuthenticationFilter {
 
-    public JwtFilter(AuthenticationManager authenticationManager) {
-        super(authenticationManager);
+public class JwtFilter extends UsernamePasswordAuthenticationFilter {
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtConfig jwtConfig;
+    private final SecretKey secretKey;
+
+    public JwtFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig, SecretKey secretKey) {
+        this.authenticationManager = authenticationManager;
+        this.jwtConfig = jwtConfig;
+        this.secretKey = secretKey;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request,
+                                                HttpServletResponse response) throws AuthenticationException {
 
-        String header = request.getHeader("Authorization");
-        UsernamePasswordAuthenticationToken authResult = getAuthenticationByToken(header);
-        SecurityContextHolder.getContext().setAuthentication(authResult);
-        chain.doFilter(request, response);
+        try {
+            UsernameAndPasswordAuthenticationRequest authenticationRequest = new ObjectMapper()
+                    .readValue(request.getInputStream(), UsernameAndPasswordAuthenticationRequest.class);
 
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    authenticationRequest.getUsername(),
+                    authenticationRequest.getPassword()
+            );
+
+            return authenticationManager.authenticate(authentication);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
+        String token = Jwts.builder()
+                .setSubject(authResult.getName())
+                .claim("authorities", authResult.getAuthorities())
+                .setIssuedAt(new Date())
+                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.tokenExpirationAfterDays)))
+                .signWith(secretKey)
+                .compact();
+
+        response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.tokenPrefix + token);
     }
 
 
-    private UsernamePasswordAuthenticationToken getAuthenticationByToken(String header){
-
-        Jws<Claims> claimsJws = Jwts.parser().setSigningKey("aaa" .getBytes())
-                .parseClaimsJws(header.replace("Bearer ", ""));
-
-        String userName = claimsJws.getBody().get("userName").toString();
-        String userPassword = claimsJws.getBody().get("userPassword").toString();
-
-        return new UsernamePasswordAuthenticationToken(userName, userPassword);
-
-    }
 }

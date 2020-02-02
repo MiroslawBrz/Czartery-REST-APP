@@ -2,6 +2,7 @@ package pl.miroslawbrz.czartery.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +29,14 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
 
     private UserRepository userRepository;
     private Mail mail;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(MsgSource msgSource, UserRepository userRepository, Mail mail) {
+    public UserServiceImpl(MsgSource msgSource, UserRepository userRepository, Mail mail, PasswordEncoder passwordEncoder) {
         super(msgSource);
         this.userRepository = userRepository;
         this.mail = mail;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -116,7 +119,7 @@ public class UserServiceImpl extends AbstractCommonService implements UserServic
                 .userName(request.getUserName())
                 .userLastName(request.getUserLastName())
                 .userMail(request.getUserMail())
-                .userPassword(request.getUserPassword())
+                .userPassword(passwordEncoder.encode(request.getUserPassword()))
                 .build();
 
         user.setActivationHash(user.hashCode());

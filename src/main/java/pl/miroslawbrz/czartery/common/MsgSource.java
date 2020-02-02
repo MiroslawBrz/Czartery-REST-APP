@@ -45,6 +45,8 @@ public class MsgSource {
     public final ConstErrorMsg ERR304;
     public final ConstErrorMsg ERR305;
 
+    public final ConstErrorMsg ERR401;
+
 
     public MsgSource(
 
@@ -86,7 +88,8 @@ public class MsgSource {
             @Value("${reservation.const.error.msg.err302}") String err302MsgValue,
             @Value("${reservation.const.error.msg.err303}") String err303MsgValue,
             @Value("${reservation.const.error.msg.err304}") String err304MsgValue,
-            @Value("${reservation.const.error.msg.err305}") String err305MsgValue
+            @Value("${reservation.const.error.msg.err305}") String err305MsgValue,
+            @Value("${jwt.const.error.msg.err401}") String err401MsgValue
 
     ){
 
@@ -128,5 +131,7 @@ public class MsgSource {
         ERR303 = new ConstErrorMsg("ERR303", err303MsgValue);
         ERR304 = new ConstErrorMsg("ERR304", err304MsgValue);
         ERR305 = new ConstErrorMsg("ERR305", err305MsgValue);
+
+        ERR401 = new ConstErrorMsg("ERR401", err401MsgValue);
     }
 }
