@@ -7,6 +7,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pl.miroslawbrz.czartery.common.MsgSource;
@@ -18,17 +19,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 
 public class JwtVerifier extends OncePerRequestFilter {
 
     private final SecretKey secretKey;
     private final JwtConfig jwtConfig;
     private MsgSource msgSource;
+    private CustomUserDetailService customUserDetailService;
 
-    public JwtVerifier(SecretKey secretKey, JwtConfig jwtConfig, MsgSource msgSource) {
+    public JwtVerifier(SecretKey secretKey, JwtConfig jwtConfig, MsgSource msgSource, CustomUserDetailService customUserDetailService) {
         this.secretKey = secretKey;
         this.jwtConfig = jwtConfig;
         this.msgSource = msgSource;
+        this.customUserDetailService = customUserDetailService;
     }
 
     @Override
@@ -43,7 +47,7 @@ public class JwtVerifier extends OncePerRequestFilter {
 
         try {
 
-            String token = authorizationHeader.replace(jwtConfig.tokenPrefix, "");
+            String token = authorizationHeader.replace(jwtConfig.tokenPrefix + " ", "");
 
             Jws<Claims> claimsJws = Jwts.parser()
                     .setSigningKey(secretKey)
@@ -52,11 +56,14 @@ public class JwtVerifier extends OncePerRequestFilter {
             Claims body = claimsJws.getBody();
 
             String username = body.getSubject();
-            String password = body.get("password").toString();
+
+
+            Collection<? extends GrantedAuthority> authorities = customUserDetailService.loadUserByUsername(username).getAuthorities();
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     username,
-                    password
+                    null,
+                    authorities
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

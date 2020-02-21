@@ -31,7 +31,7 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Set<ReservationDetails> reservationDetails;
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     private Set<UserRole> userRoles;
 
 

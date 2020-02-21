@@ -60,13 +60,12 @@ public class JwtFilter extends UsernamePasswordAuthenticationFilter {
                                             Authentication authResult) throws IOException, ServletException {
         String token = Jwts.builder()
                 .setSubject(authResult.getName())
-                .claim("authorities", authResult.getAuthorities())
                 .setIssuedAt(new Date())
                 .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.tokenExpirationAfterDays)))
                 .signWith(secretKey)
                 .compact();
 
-        response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.tokenPrefix + token);
+        response.addHeader(jwtConfig.getAuthorizationHeader(), jwtConfig.tokenPrefix + " " + token);
     }
 
 

@@ -15,7 +15,12 @@ public class UserRole {
     private Long id;
     private String role;
     private String description;
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     private Set<User> userSet;
 
+    public UserRole(String role, String description) {
+        this.role = role;
+        this.description = description;
+    }
+    public UserRole(){}
 }
